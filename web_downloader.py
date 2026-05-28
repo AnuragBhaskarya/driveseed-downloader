@@ -1233,7 +1233,7 @@ def main():
     """, flush=True)
     print("=== DriveSeed Standalone Web Downloader Server ===", flush=True)
 
-    port = 5555
+    port = int(os.environ.get("PORT", 5555))
     server_address = ('', port)
     
     try:
@@ -1242,11 +1242,12 @@ def main():
         print(f"[-] Error starting server on port {port}: {e}", flush=True)
         sys.exit(1)
 
-    print(f"[+] Local server started successfully at: http://localhost:{port}", flush=True)
-    print("[*] Automatically launching your browser window...", flush=True)
+    print(f"[+] Server started successfully on port {port}", flush=True)
     
-    # Auto-open browser window in background
-    webbrowser.open(f"http://localhost:{port}")
+    # Auto-open browser window in background only if not in cloud mode
+    if not DOWNLOAD_MGR.cloud_mode:
+        print("[*] Automatically launching your browser window...", flush=True)
+        webbrowser.open(f"http://localhost:{port}")
 
     try:
         httpd.serve_forever()
